@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 1.) Copy ssh-key from c7-1 to all nodes:
 ssh-copy-id spirrell@c7-2
