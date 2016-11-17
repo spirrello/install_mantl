@@ -1,0 +1,7 @@
+---
+
+- name: create partition
+  filesystem: fstype=xfs dev=/dev/sda force=yes #opts="-cc"
+
+- name: create file
+  file: path=/home/spirrell/testfile state=touch #mode="u=rw,g=r,o=r"

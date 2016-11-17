@@ -1,0 +1,35 @@
+[role=control]
+c7-2 private_ipv4=192.16.56.102 provider=metal ansible_ssh_host=192.16.56.102
+# c7-3 private_ipv4=192.16.56.103 ansible_ssh_host=192.16.56.103
+# c7-4 private_ipv4=192.16.56.104 ansible_ssh_host=192.16.56.104
+
+# [role=control:vars]
+# consul_is_server=true
+# lvm_physical_device=/dev/sda3
+
+[role=worker]
+c7-5 private_ipv4=192.16.56.105 provider=metal ansible_ssh_host=192.16.56.105
+# c7-6 private_ipv4=192.16.56.106 ansible_ssh_host=192.16.56.106
+# c7-7 private_ipv4=192.16.56.107 ansible_ssh_host=192.16.56.107
+
+# [role=worker:vars]
+# consul_is_server=false
+# lvm_physical_device=/dev/sda3
+
+[role=edge]
+c7-8 private_ipv4=192.16.56.108 provider=metal ansible_ssh_host=192.16.56.108
+# c7-9 private_ipv4=192.16.56.109 ansible_ssh_host=192.16.56.109
+
+# [role=edge:vars]
+# consul_is_server=false
+# lvm_physical_device=/dev/sda3
+
+[dc=dc1]
+c7-2
+# c7-3
+# c7-4
+c7-5
+# c7-6
+# c7-7
+c7-8
+# c7-9

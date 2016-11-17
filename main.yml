@@ -1,0 +1,61 @@
+---
+
+- name: create /tmp/dcos and browse to it
+  file: path=/tmp/dcos state=directory
+
+- name: curl dcos_install.sh from bootstrap
+  command: curl -O http://{{bootstrap_node}}:{{bootstrap_port}}/dcos_install.sh
+  args:
+    chdir: /tmp/dcos
+
+- name: run DCOS installer on masters
+  command: bash /tmp/dcos/dcos_install.sh master
+
+# - name: upload SSL cert files to masters
+#   copy:
+#     src: "{{ item }}"
+#     dest: /opt/mesosphere/active/adminrouter/nginx/conf/
+#     #owner:
+#     #group:
+#     #mode:
+#   with_items:
+#     - star.liaison.key
+#     - star.liaison.dev.pem
+#   when: internet_access
+
+# - name: upload SSL cert files to masters (internal)
+#   copy:
+#     src: "{{ item }}"
+#     dest: /opt/mesosphere/active/adminrouter/nginx/conf/
+#     #owner:
+#     #group:
+#     #mode:
+#   with_items:
+#     - star.liaison.prod.key
+#     - star.liaison.prod.pem
+#   when: not internet_access
+
+# - name: create nginx.conf for adminrouter
+#   template: src=nginx_conf_noauth_ssl.j2 dest=/opt/mesosphere/active/adminrouter/nginx/conf/nginx.conf backup=yes force=yes
+#   when: not enterprise
+
+- name: add Liaison certs to nginx.conf
+  shell: sed -i -e "s/snakeoil.crt/\/opt\/liaison\/certs\/{{ssl_combo}}/g; s/snakeoil.key/\/opt\/liaison\/certs\/{{ssl_key}}/g" /opt/mesosphere/active/adminrouter/nginx/conf/nginx.conf
+  when: enterprise
+
+#- name: restart Admin Router for Liaison cert propagation
+#  service: name=dcos-adminrouter.service state=restarted
+#  when: enterprise
+
+- name: copy Marathon check script over to /opt/liaison/scripts
+  copy: src=templates/check_marathon.py dest=/opt/liaison/scripts/check_marathon.py
+  when: not enterprise
+
+
+- name: chmod +x check_marathon.py
+  shell: chmod +x /opt/liaison/scripts/check_marathon.py
+  #when: not enterprise
+
+- name: create Marathon cron tab
+  template: src=check_marathon_cron dest=/etc/cron.d/check_marathon
+  when: not enterprise

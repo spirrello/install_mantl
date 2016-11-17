@@ -1,0 +1,7 @@
+---
+- hosts: c7-2
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - servers
